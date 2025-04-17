@@ -4,8 +4,8 @@
 *
 * Theme    : Brilio
 * Version  : 1.0
-* Author   : Themeland
-* Support  : hridoy1272@gmail.com
+* Author   : Codings
+* Support  : codings.dev
 * 
 ----------------------------------------------*/
 
@@ -102,32 +102,52 @@
 		2. Navigation
 		----------------------------------------------*/
 		
-		var position = window.scrollY;
-		var navbar = document.querySelector('.navbar');
-		var topThreshold = 50;
-	
-		document.addEventListener('DOMContentLoaded', function () {
-			if (position > topThreshold) {
-				navbar.style.display = 'none'; // Hide navbar if not near the top on page load
-			}
-		});
-	
-		window.addEventListener('scroll', function () {
-	
-			let scroll = window.scrollY;
-	
-			if (!navbar.classList.contains('relative')) {
-	
-				if (scroll > topThreshold) { // Scrolling down or up, but not near the top
-					navbar.style.display = 'none'; // Hide the navbar
-				} else { // Near the top of the page
-					navbar.style.display = 'block'; // Show the navbar
+		// Safe navigation manipulation
+		function safeNavigation() {
+			const navbar = document.querySelector('.navbar');
+			
+			// Only run navigation code if navbar exists
+			if (navbar) {
+				let position = window.scrollY;
+				let topThreshold = 50;
+
+				// Initial check
+				if (position > topThreshold) {
+					navbar.style.display = 'none';
 				}
-	
-				position = scroll; // Update the position for the next scroll event
+
+				window.addEventListener('scroll', function () {
+					let scroll = window.scrollY;
+
+					if (navbar && !navbar.classList.contains('relative')) {
+						if (scroll > topThreshold) {
+							navbar.style.display = 'none';
+						} else {
+							navbar.style.display = 'block';
+						}
+						position = scroll;
+					}
+				}, { passive: true });
+
+				// Safe link handling
+				const navLinks = document.querySelectorAll('.nav-link');
+				navLinks.forEach(function(link) {
+					link.addEventListener('click', function(e) {
+						if (link.getAttribute('href').startsWith('#')) {
+							e.preventDefault();
+							const target = document.querySelector(link.getAttribute('href'));
+							if (target) {
+								target.scrollIntoView({ behavior: 'smooth' });
+							}
+						}
+					});
+				});
 			}
-		});
-	
+		}
+
+		// Initialize safe navigation
+		safeNavigation();
+
 		let navLinks = document.querySelectorAll('.nav-link');
 		navLinks.forEach(function (link) {
 			let href = link.getAttribute('href');

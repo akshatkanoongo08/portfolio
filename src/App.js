@@ -1,13 +1,14 @@
 import React from 'react';
-
-// importing MyRouts where we located all of our theme
-import MyRouts from './routers/routes';
+import { BrowserRouter as Router } from 'react-router-dom';
+import MyRoutes from './routers/routes';
 
 function App() {
   return (
-    <div>
-      <MyRouts />
-    </div>
+    <Router>
+      <div className="App">
+        <MyRoutes />
+      </div>
+    </Router>
   );
 }
 

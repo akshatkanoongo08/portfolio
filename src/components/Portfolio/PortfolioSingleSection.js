@@ -1,83 +1,116 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import api from '../../services/api';
 
 const PortfolioSingleSection = () => {
-  const [portfolio, setPortfolio] = useState(null);
+  const { id } = useParams();
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("https://my-json-server.typicode.com/themeland/brilio-json-1/singlePortfolio")
-      .then((response) => {
-        // Set portfolio data with the response from the JSON server
-        setPortfolio(response.data);
-      })
-      .catch((error) => console.error("Error fetching portfolio data:", error));
-  }, []);
+    fetchProject();
+  }, [id]);
 
-  if (!portfolio) {
-    return <p>Loading...</p>;
+  const fetchProject = async () => {
+    try {
+      const response = await api.get(`/projects/${id}`);
+      setProject(response.data);
+    } catch (err) {
+      console.error('Error fetching project:', err);
+      setError('Failed to load project details');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="section-padding">Loading...</div>;
+  }
+
+  if (error || !project) {
+    return (
+      <div className="section-padding">
+        <div className="container">
+          <div className="alert alert-danger">{error || 'Project not found'}</div>
+          <Link to="/portfolio" className="btn btn-primary">Back to Portfolio</Link>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <section className="content">
+    <section className="section-padding">
       <div className="container">
-        <div className="row justify-content-between">
-          <div className="col-12 col-lg-5">
-            <div className="heading">
-              <div className="portfolio-meta d-flex align-items-center">
-                <div className="portfolio-terms">
-                  {portfolio.categories.map((category, index) => (
-                    <a key={index} className="terms" href="/portfolio">
-                      {category}
-                    </a>
-                  ))}
-                </div>
-                <span className="date">{portfolio.date}</span>
-              </div>
-              <h2>{portfolio.title}</h2>
-              <p>{portfolio.description}</p>
-            </div>
-          </div>
-          <div className="col-12 col-lg-6 items portfolio-meta mt-3 mt-md-0">
-            <div className="task">
-              <h6 className="title mb-3">Task</h6>
-              <span className="details">{portfolio.task}</span>
-            </div>
-            <div className="content item d-flex flex-column flex-md-row justify-content-between">
-              <div className="role">
-                <h6 className="title mt-0 mb-1 mb-md-3">Role/Services</h6>
-                <div className="portfolio-terms">
-                  {portfolio.role.map((role, index) => (
-                    <a key={index} className="terms" href="/portfolio">
-                      {role}
-                    </a>
-                  ))}
-                </div>
-              </div>
-              <div className="client my-3 my-md-0">
-                <h6 className="title mt-0 mb-1 mb-md-3">Client</h6>
-                <span>{portfolio.client}</span>
-              </div>
-              <div className="category">
-                <h6 className="title mt-0 mb-1 mb-md-3">Category &amp; Year</h6>
-                <span>{portfolio.categoryYear}</span>
-              </div>
-            </div>
-            <div className="socials item">
-              <a className="nav-link d-inline-flex swap-icon ms-0" href={portfolio.liveSite}>
-                Live Site <i className="icon bi bi-arrow-right-short"></i>
-              </a>
+        {/* Project Header */}
+        <div className="row mb-5">
+          <div className="col-12">
+            <h1 className="display-4">{project.title}</h1>
+            <div className="categories mb-4">
+              {project.categories.map((category, index) => (
+                <span key={category._id} className="badge bg-primary me-2">
+                  {category.name}
+                </span>
+              ))}
             </div>
           </div>
         </div>
-        <div className="row portfolio-content items">
+
+        {/* Project Image */}
+        <div className="row mb-5">
           <div className="col-12">
-            {/* Directly render the images from the gallery without animation */}
-            {portfolio.gallery.map((img, index) => (
-              <div key={index} className="item">
-                <img src={img} alt={`Gallery ${index + 1}`} />
-              </div>
-            ))}
+            <img 
+              src={project.image} 
+              alt={project.title}
+              className="img-fluid rounded shadow-lg"
+              style={{ width: '100%', maxHeight: '600px', objectFit: 'cover' }}
+            />
+          </div>
+        </div>
+
+        {/* Project Details */}
+        <div className="row">
+          <div className="col-lg-8">
+            <div className="project-description">
+              <h3 className="mb-4">Project Description</h3>
+              <div dangerouslySetInnerHTML={{ __html: project.description }} />
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="project-meta p-4 bg-light rounded">
+              <h4 className="mb-4">Project Details</h4>
+              <ul className="list-unstyled">
+                {project.client && (
+                  <li className="mb-3">
+                    <strong>Client:</strong> {project.client}
+                  </li>
+                )}
+                {project.date && (
+                  <li className="mb-3">
+                    <strong>Date:</strong> {new Date(project.date).toLocaleDateString()}
+                  </li>
+                )}
+                {project.url && (
+                  <li className="mb-3">
+                    <strong>Website:</strong>{' '}
+                    <a href={project.url} target="_blank" rel="noopener noreferrer">
+                      Visit Project
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div className="row mt-5">
+          <div className="col-12">
+            <div className="d-flex justify-content-between">
+              <Link to="/portfolio" className="btn btn-outline-primary">
+                Back to Portfolio
+              </Link>
+            </div>
           </div>
         </div>
       </div>
