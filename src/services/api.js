@@ -4,9 +4,9 @@ const API_URL = 'http://localhost:5000/api'; // Adjust the URL as needed
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // },
 });
 
 // Add a request interceptor to include the token

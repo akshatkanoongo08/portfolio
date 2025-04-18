@@ -66,7 +66,35 @@ const ProjectsManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setLoading(true);
+    try {
+      const data = new FormData();
+      data.append('title', formData.title);
+      data.append('description', formData.description);
+      data.append('client', formData.client);
+      data.append('task', formData.task);
+      data.append('date', formData.date);
+      // For array fields
+      formData.categories.forEach(cat => data.append('categories', cat));
+      formData.role.forEach(role => data.append('role', role));
+      // For image
+      if (formData.image) data.append('image', formData.image);
+      // For gallery (if implemented)
+      if (formData.gallery && formData.gallery.length > 0) {
+        formData.gallery.forEach(file => data.append('gallery', file));
+      }
+      let response;
+      if (selectedProject) {
+        response = await updateProject(selectedProject._id, data);
+      } else {
+        response = await createProject(data);
+      }
+      // handle response, reset form, etc.
+    } catch (err) {
+      console.error('Error:', err);
+    } finally {
+      setLoading(false);
+    }
     // Validate categories
     if (!formData.categories || formData.categories.length === 0) {
       setError('At least one category is required');
