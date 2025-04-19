@@ -47,14 +47,20 @@ const PortfolioOne = () => {
             <div className="card portfolio-item layout-2 scale has-shadow">
               <div className="image-holder">
                 <Link className="card-thumb" to={`/portfolio/${item._id}`}>
-                  <img 
-                    src={item.image ? `${API_URL}${item.image}` : '/img/placeholder.jpg'}
-                    alt={item.title || 'Project'}
-                    onError={(e) => {
-                      e.target.onerror = null; // Prevent infinite loop
-                      e.target.src = '/img/placeholder.jpg'; // Fallback image
-                    }}
-                  />
+                <img
+  src={
+    item.image && item.image.url
+      ? item.image.url.startsWith('http')
+        ? item.image.url
+        : `${API_URL}${item.image.url}`
+      : '/img/placeholder.jpg'
+  }
+  alt={item.title || 'Project'}
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = '/img/placeholder.jpg';
+  }}
+/>
                 </Link>
               </div>
               <div className="card-content p-2">

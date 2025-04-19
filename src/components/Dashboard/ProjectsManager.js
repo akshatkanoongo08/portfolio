@@ -310,6 +310,16 @@ const ProjectsManager = () => {
             <div className="project-info">
               <h4>{project.title}</h4>
               <p>{project.description}</p>
+              {/* IMAGE DISPLAY */}
+              {project.image && project.image.url && (
+                <img
+                  src={project.image.url.startsWith('http')
+                    ? project.image.url
+                    : `http://localhost:5000${project.image.url}`}
+                  alt={project.title}
+                  style={{ maxWidth: 200, maxHeight: 200, display: 'block', marginTop: 8 }}
+                />
+              )}
             </div>
             <div className="project-actions">
               <button onClick={() => handleEdit(project)}>Edit</button>
