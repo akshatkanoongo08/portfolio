@@ -3,11 +3,11 @@ import MagneticButton from '../Miscellaneous/MagneticButton';
 
 const Form = () => {
   const contactInfo = {
-    title: 'Schedule a call with me to see if I can help',
+    title: 'Schedule a call with us to see if we can help',
     description: 'Whether you’re looking to start a new project or simply want to chat, feel free to reach out to me!',
-    phone: '+1.890.473.5102',
-    email: 'hello@brilio.com',
-    address: '912 Park Ave, Ketchikan, Alaska 99901, USA',
+    phone: '+91-78913 31221',
+    email: 'himanshu@revtidigital.com',
+    address: 'F-21, Tonk Phatak, Jaipur, Raj 302015',
   };
 
   const [formData, setFormData] = useState({

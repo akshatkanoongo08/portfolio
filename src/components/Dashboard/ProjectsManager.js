@@ -7,6 +7,7 @@ const API_URL = 'http://localhost:5000'; // Match your backend URL
 const ProjectsManager = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [galleryFiles, setGalleryFiles] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -63,7 +64,9 @@ const ProjectsManager = () => {
       image: file
     }));
   };
-
+  const handleGalleryChange = (e) => {
+    setGalleryFiles([...e.target.files]);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -290,6 +293,13 @@ const ProjectsManager = () => {
             accept="image/*"
           />
         </div>
+        <input
+  type="file"
+  name="gallery"
+  multiple
+  accept="image/*"
+  onChange={handleGalleryChange}
+/>
 
         <div className="form-actions">
           <button type="submit" disabled={loading}>

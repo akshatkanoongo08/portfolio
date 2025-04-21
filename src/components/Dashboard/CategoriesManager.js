@@ -27,10 +27,16 @@ const CategoriesManager = () => {
     e.preventDefault();
     try {
       if (editingCategory) {
-        await api.put(`/categories/${editingCategory._id}`, newCategory);
+        await api.put(`/categories/${editingCategory._id}`, {
+          label: newCategory.name,
+          description: newCategory.description
+        });
         setSuccess('Category updated successfully');
       } else {
-        await api.post('/categories', newCategory);
+        await api.post('/categories', {
+          label: newCategory.name,
+          description: newCategory.description
+        });
         setSuccess('Category created successfully');
       }
       
@@ -152,10 +158,10 @@ const CategoriesManager = () => {
               background: '#fff'
             }}
           >
-            <h4 style={{ margin: '0 0 10px 0' }}>{category.name}</h4>
-            {category.description && (
-              <p style={{ margin: '0 0 10px 0', color: '#666' }}>{category.description}</p>
-            )}
+            <h4 style={{ margin: '0 0 10px 0' }}>{category.label || category.name}</h4>
+{(category.description) && (
+  <p style={{ margin: '0 0 10px 0', color: '#666' }}>{category.description}</p>
+)}
             <div style={{ display: 'flex', gap: '10px' }}>
               <button
                 onClick={() => handleEdit(category)}
