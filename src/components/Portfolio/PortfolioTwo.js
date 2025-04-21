@@ -98,14 +98,20 @@ const PortfolioTwo = () => {
             >
               <div className="portfolio-item">
                 <Link to={`/portfolio/${item._id}`} className="portfolio-image">
-                  <img 
-                    src={`${API_URL}${item.image}`} 
-                    alt={item.title}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = '/img/placeholder.jpg';
-                    }}
-                  />
+                <img
+  src={
+    item.image && item.image.url
+      ? item.image.url.startsWith('http')
+        ? item.image.url
+        : `${API_URL}${item.image.url}`
+      : '/img/placeholder.jpg'
+  }
+  alt={item.title}
+  onError={e => {
+    e.target.onerror = null;
+    e.target.src = '/img/placeholder.jpg';
+  }}
+/>
                 </Link>
                 <div className="portfolio-content">
                   <h3 className="portfolio-title">

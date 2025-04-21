@@ -59,12 +59,22 @@ const PortfolioSingleSection = () => {
         {/* Project Image */}
         <div className="row mb-5">
           <div className="col-12">
-            <img 
-              src={project.image} 
-              alt={project.title}
-              className="img-fluid rounded shadow-lg"
-              style={{ width: '100%', maxHeight: '600px', objectFit: 'cover' }}
-            />
+          <img
+  src={
+    project.image && project.image.url
+      ? project.image.url.startsWith('http')
+        ? project.image.url
+        : `http://localhost:5000${project.image.url}`
+      : '/img/placeholder.jpg'
+  }
+  alt={project.title}
+  className="img-fluid rounded shadow-lg"
+  style={{ width: '100%', maxHeight: '600px', objectFit: 'cover' }}
+  onError={e => {
+    e.target.onerror = null;
+    e.target.src = '/img/placeholder.jpg';
+  }}
+/>
           </div>
         </div>
 
