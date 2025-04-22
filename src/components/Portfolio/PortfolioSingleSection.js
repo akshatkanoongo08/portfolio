@@ -47,9 +47,9 @@ const PortfolioSingleSection = () => {
           <div className="col-12">
             <h1 className="display-4">{project.title}</h1>
             <div className="categories mb-4">
-              {project.categories.map((category, index) => (
-                <span key={category._id} className="badge bg-primary me-2">
-                  {category.name}
+              {Array.isArray(project.categories) && project.categories.map((category, index) => (
+                <span key={category._id || index} className="badge bg-primary me-2">
+                  {category.name || category.label || category.value}
                 </span>
               ))}
             </div>
@@ -77,6 +77,30 @@ const PortfolioSingleSection = () => {
 />
           </div>
         </div>
+
+        {/* Project Gallery */}
+        {Array.isArray(project.gallery) && project.gallery.length > 0 && (
+          <div className="row mb-5">
+            <div className="col-12">
+              <h4>Gallery</h4>
+              <div className="d-flex flex-wrap gap-3">
+                {project.gallery.map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img.url && !img.url.startsWith('http') ? `http://localhost:5000${img.url}` : img.url}
+                    alt={`Gallery ${idx + 1}`}
+                    className="img-fluid rounded shadow"
+                    style={{ width: '200px', height: '150px', objectFit: 'cover' }}
+                    onError={e => {
+                      e.target.onerror = null;
+                      e.target.src = '/img/placeholder.jpg';
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Project Details */}
         <div className="row">

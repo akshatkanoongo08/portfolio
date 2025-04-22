@@ -20,11 +20,23 @@ const ProjectsManager = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [allCategories, setAllCategories] = useState([]);
 
   // Fetch projects on component mount
   useEffect(() => {
     fetchProjects();
+    fetchCategories(); // 👈 fetch this too
   }, []);
+  
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/categories');
+      const data = await res.json();
+      setAllCategories(data);
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+    }
+  };  
 
   const fetchProjects = async () => {
     try {
@@ -43,7 +55,6 @@ const ProjectsManager = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'categories' || name === 'role') {
-      // Split comma-separated values into array, handle empty string case
       const arrayValue = value.trim() ? value.split(',').map(item => item.trim()) : [];
       setFormData(prev => ({
         ...prev,
@@ -158,7 +169,7 @@ const ProjectsManager = () => {
     setFormData({
       title: project.title || '',
       description: project.description || '',
-      categories: Array.isArray(project.categories) ? project.categories : [],
+      categories: project.categories.map(cat => cat._id),
       client: project.client || '',
       task: project.task || '',
       role: Array.isArray(project.role) ? project.role : [],
@@ -228,15 +239,24 @@ const ProjectsManager = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="categories">Categories * (comma-separated)</label>
-          <input
-            type="text"
-            id="categories"
-            name="categories"
-            value={Array.isArray(formData.categories) ? formData.categories.join(', ') : ''}
-            onChange={handleInputChange}
-            required
-          />
+          <label htmlFor="categories">Categories *</label>
+          <select
+          id="categories"
+          name="categories"
+          multiple
+          value={formData.categories}
+          onChange={(e) => {
+            const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
+            setFormData(prev => ({ ...prev, categories: selected }));
+          }}
+        >
+          {allCategories.map(cat => (
+            <option key={cat._id} value={cat._id}>
+              {cat.label}
+            </option>
+          ))}
+        </select>
+
         </div>
 
         <div className="form-group">

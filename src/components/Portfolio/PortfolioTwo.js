@@ -81,7 +81,7 @@ const PortfolioTwo = () => {
                   }
                   onClick={() => setActiveCategory(category._id)}
                 >
-                  {category.name}
+                  {category.label}
                   <span className="filter-count">
                     ({getCategoryCount(category._id)})
                   </span>
@@ -120,7 +120,7 @@ const PortfolioTwo = () => {
                   <div className="portfolio-categories">
                     {item.categories && item.categories.map((cat, index) => (
                       <span key={cat._id}>
-                        {cat.name}
+                        {cat.label}
                         {index < item.categories.length - 1 ? ", " : ""}
                       </span>
                     ))}
