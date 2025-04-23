@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getProjects, createProject, updateProject, deleteProject } from '../../services/projectService';
 import './ProjectsManager.css';
 
@@ -7,7 +7,10 @@ const API_URL = 'http://localhost:5000'; // Match your backend URL
 const ProjectsManager = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
+  
   const [galleryFiles, setGalleryFiles] = useState([]);
+  const galleryInputRef = useRef(null);
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -76,8 +79,19 @@ const ProjectsManager = () => {
     }));
   };
   const handleGalleryChange = (e) => {
-    setGalleryFiles([...e.target.files]);
+    const newFiles = Array.from(e.target.files);
+    // Avoid duplicates by name+lastModified
+    const existingKeys = new Set(galleryFiles.map(f => f.name + f.lastModified));
+    const uniqueNewFiles = newFiles.filter(f => !existingKeys.has(f.name + f.lastModified));
+    setGalleryFiles(prev => [...prev, ...uniqueNewFiles]);
+    // Reset file input so user can re-select same file
+    if (galleryInputRef.current) galleryInputRef.current.value = '';
   };
+
+  // Remove a file from galleryFiles by index
+  const handleRemoveGalleryFile = (removeIdx) => {
+    setGalleryFiles(prev => prev.filter((_, idx) => idx !== removeIdx));
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -93,9 +107,13 @@ const ProjectsManager = () => {
       formData.role.forEach(role => data.append('role', role));
       // For image
       if (formData.image) data.append('image', formData.image);
-      // For gallery (if implemented)
-      if (formData.gallery && formData.gallery.length > 0) {
-        formData.gallery.forEach(file => data.append('gallery', file));
+      // For gallery (multiple files)
+      if (galleryFiles && galleryFiles.length > 0) {
+        galleryFiles.forEach(file => data.append('gallery', file));
+      }
+      // Debug: log FormData contents
+      for (let pair of data.entries()) {
+        console.log('FormData:', pair[0], pair[1]);
       }
       let response;
       if (selectedProject) {
@@ -103,56 +121,6 @@ const ProjectsManager = () => {
       } else {
         response = await createProject(data);
       }
-      // handle response, reset form, etc.
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      setLoading(false);
-    }
-    // Validate categories
-    if (!formData.categories || formData.categories.length === 0) {
-      setError('At least one category is required');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const formDataToSend = new FormData();
-      
-      // Ensure categories is always an array
-      const categoriesArray = Array.isArray(formData.categories) 
-        ? formData.categories 
-        : [];
-        
-      formDataToSend.append('categories', JSON.stringify(categoriesArray));
-      
-      // Append other fields
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('client', formData.client);
-      formDataToSend.append('task', formData.task);
-      formDataToSend.append('date', formData.date);
-      
-      // Handle arrays by stringifying them
-      formDataToSend.append('role', 
-        JSON.stringify(
-          Array.isArray(formData.role) 
-            ? formData.role 
-            : []
-        )
-      );
-      
-      // Append image file if exists
-      if (formData.image) {
-        formDataToSend.append('image', formData.image);
-      }
-      
-      if (selectedProject) {
-        await updateProject(selectedProject._id, formDataToSend);
-      } else {
-        await createProject(formDataToSend);
-      }
-      
       fetchProjects();
       resetForm();
       setError(null);
@@ -169,7 +137,7 @@ const ProjectsManager = () => {
     setFormData({
       title: project.title || '',
       description: project.description || '',
-      categories: project.categories.map(cat => cat._id),
+      categories: Array.isArray(project.categories) ? project.categories.map(cat => cat._id) : [],
       client: project.client || '',
       task: project.task || '',
       role: Array.isArray(project.role) ? project.role : [],
@@ -313,13 +281,32 @@ const ProjectsManager = () => {
             accept="image/*"
           />
         </div>
-        <input
-  type="file"
-  name="gallery"
-  multiple
-  accept="image/*"
-  onChange={handleGalleryChange}
-/>
+
+        <div className="form-group">
+          <label htmlFor="gallery">Gallery Images</label>
+          <input
+            type="file"
+            id="gallery"
+            name="gallery"
+            multiple
+            accept="image/*"
+            onChange={handleGalleryChange}
+            ref={galleryInputRef}
+          />
+          <small>Select one or more images.</small>
+          {galleryFiles.length > 0 && (
+            <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
+              {galleryFiles.map((file, idx) => (
+                <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {file.name}
+                  <button type="button" style={{ color: 'red', border: 'none', background: 'none', cursor: 'pointer' }} onClick={() => handleRemoveGalleryFile(idx)}>
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <div className="form-actions">
           <button type="submit" disabled={loading}>
@@ -350,6 +337,26 @@ const ProjectsManager = () => {
                   style={{ maxWidth: 200, maxHeight: 200, display: 'block', marginTop: 8 }}
                 />
               )}
+              {/* GALLERY DISPLAY */}
+              <div style={{ marginTop: 12 }}>
+                <strong>Gallery:</strong>
+                {project.gallery && project.gallery.length > 0 ? (
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 6 }}>
+                    {project.gallery.map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img.url.startsWith('http')
+                          ? img.url
+                          : `http://localhost:5000${img.url}`}
+                        alt={`Gallery ${idx + 1}`}
+                        style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 4, border: '1px solid #eee' }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <span style={{ color: '#aaa', marginLeft: 8 }}>No gallery images</span>
+                )}
+              </div>
             </div>
             <div className="project-actions">
               <button onClick={() => handleEdit(project)}>Edit</button>
