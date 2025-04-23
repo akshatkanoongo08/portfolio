@@ -19,7 +19,8 @@ const ProjectsManager = () => {
     task: '',
     role: [],       // Initialize as empty array
     date: '',
-    image: null
+    image: null,
+    projectLink: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -102,6 +103,7 @@ const ProjectsManager = () => {
       data.append('client', formData.client);
       data.append('task', formData.task);
       data.append('date', formData.date);
+      data.append('projectLink', formData.projectLink);
       // For array fields
       formData.categories.forEach(cat => data.append('categories', cat));
       formData.role.forEach(role => data.append('role', role));
@@ -142,7 +144,8 @@ const ProjectsManager = () => {
       task: project.task || '',
       role: Array.isArray(project.role) ? project.role : [],
       date: project.date || '',
-      image: null // Can't pre-fill file input
+      image: null, // Can't pre-fill file input
+      projectLink: project.projectLink || ''
     });
   };
 
@@ -272,6 +275,18 @@ const ProjectsManager = () => {
         </div>
 
         <div className="form-group">
+          <label htmlFor="projectLink">Project Link</label>
+          <input
+            type="url"
+            id="projectLink"
+            name="projectLink"
+            value={formData.projectLink}
+            onChange={handleInputChange}
+            placeholder="https://example.com"
+          />
+        </div>
+
+        <div className="form-group">
           <label htmlFor="image">Project Image</label>
           <input
             type="file"
@@ -361,6 +376,23 @@ const ProjectsManager = () => {
             <div className="project-actions">
               <button onClick={() => handleEdit(project)}>Edit</button>
               <button onClick={() => handleDelete(project._id)}>Delete</button>
+              {project.projectLink && (
+                <a
+                  href={project.projectLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-block',
+                    marginLeft: 8,
+                    color: '#007bff',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    fontWeight: 500
+                  }}
+                >
+                  Project Link
+                </a>
+              )}
             </div>
           </div>
         ))}

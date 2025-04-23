@@ -124,10 +124,10 @@ const PortfolioSingleSection = () => {
                     <strong>Date:</strong> {new Date(project.date).toLocaleDateString()}
                   </li>
                 )}
-                {project.url && (
+                {project.projectLink && (
                   <li className="mb-3">
                     <strong>Website:</strong>{' '}
-                    <a href={project.url} target="_blank" rel="noopener noreferrer">
+                    <a href={project.projectLink} target="_blank" rel="noopener noreferrer">
                       Visit Project
                     </a>
                   </li>
