@@ -132,6 +132,22 @@ const PortfolioSingleSection = () => {
                     </a>
                   </li>
                 )}
+                {project.pdf && project.pdf.url && (
+                  <li className="mb-3">
+                    <strong>Project PDF (Cloudinary):</strong>{' '}
+                    <a href={project.pdf.url} target="_blank" rel="noopener noreferrer" download>
+                      Download PDF
+                    </a>
+                  </li>
+                )}
+                {project.pdfUrl && (
+                  <li className="mb-3">
+                    <strong>Project PDF (Public URL):</strong>{' '}
+                    <a href={project.pdfUrl} target="_blank" rel="noopener noreferrer">
+                      View PDF
+                    </a>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

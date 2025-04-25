@@ -20,7 +20,9 @@ const ProjectsManager = () => {
     role: [],       // Initialize as empty array
     date: '',
     image: null,
-    projectLink: ''
+    projectLink: '',
+    pdf: null,
+    pdfUrl: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -79,6 +81,15 @@ const ProjectsManager = () => {
       image: file
     }));
   };
+
+  const handlePdfChange = (e) => {
+    const file = e.target.files[0];
+    setFormData(prev => ({
+      ...prev,
+      pdf: file
+    }));
+  };
+
   const handleGalleryChange = (e) => {
     const newFiles = Array.from(e.target.files);
     // Avoid duplicates by name+lastModified
@@ -109,6 +120,10 @@ const ProjectsManager = () => {
       formData.role.forEach(role => data.append('role', role));
       // For image
       if (formData.image) data.append('image', formData.image);
+      // For pdf
+      if (formData.pdf) data.append('pdf', formData.pdf);
+      // For pdfUrl (text field)
+      if (formData.pdfUrl) data.append('pdfUrl', formData.pdfUrl);
       // For gallery (multiple files)
       if (galleryFiles && galleryFiles.length > 0) {
         galleryFiles.forEach(file => data.append('gallery', file));
@@ -145,7 +160,9 @@ const ProjectsManager = () => {
       role: Array.isArray(project.role) ? project.role : [],
       date: project.date || '',
       image: null, // Can't pre-fill file input
-      projectLink: project.projectLink || ''
+      projectLink: project.projectLink || '',
+      pdf: null, // Can't pre-fill file input
+      pdfUrl: project.pdfUrl || ''
     });
   };
 
@@ -295,6 +312,39 @@ const ProjectsManager = () => {
             onChange={handleImageChange}
             accept="image/*"
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="pdf">Project PDF (optional)</label>
+          <input
+            type="file"
+            id="pdf"
+            name="pdf"
+            onChange={handlePdfChange}
+            accept="application/pdf"
+          />
+          {selectedProject && selectedProject.pdf && selectedProject.pdf.url && (
+            <div style={{ marginTop: '8px' }}>
+              <a href={selectedProject.pdf.url} target="_blank" rel="noopener noreferrer">Download current PDF</a>
+            </div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="pdfUrl">Project PDF Public URL (optional)</label>
+          <input
+            type="url"
+            id="pdfUrl"
+            name="pdfUrl"
+            value={formData.pdfUrl}
+            onChange={handleInputChange}
+            placeholder="https://drive.google.com/..."
+          />
+          {selectedProject && selectedProject.pdfUrl && (
+            <div style={{ marginTop: '8px' }}>
+              <a href={selectedProject.pdfUrl} target="_blank" rel="noopener noreferrer">View current PDF URL</a>
+            </div>
+          )}
         </div>
 
         <div className="form-group">
