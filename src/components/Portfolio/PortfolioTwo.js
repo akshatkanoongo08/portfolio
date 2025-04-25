@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
+import "./PortfolioTwo.css";
 
 const API_URL = 'http://localhost:5000'; // Match your backend URL
 

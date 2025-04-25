@@ -1,0 +1,50 @@
+.portfolio-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.portfolio-filter li {
+  font-size: 1.04rem;
+  font-weight: 500;
+  padding: 7px 22px;
+  border-radius: 20px;
+  border: 1.5px solid #e4e4e4;
+  background: #f9f9f9;
+  color: #232323;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(.4,0,.2,1);
+  margin-bottom: 6px;
+  position: relative;
+  outline: none;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+
+.portfolio-filter li.current,
+.portfolio-filter li:hover {
+  background: #232323;
+  color: #fff;
+  border-color: #232323;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+}
+
+.portfolio-filter .filter-count {
+  font-size: 0.97em;
+  margin-left: 5px;
+  color: #888;
+  background: #eaeaea;
+  border-radius: 12px;
+  padding: 2px 10px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.portfolio-filter li.current .filter-count,
+.portfolio-filter li:hover .filter-count {
+  background: #fff;
+  color: #232323;
+}
