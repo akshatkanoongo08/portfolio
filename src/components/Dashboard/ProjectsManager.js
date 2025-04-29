@@ -22,7 +22,8 @@ const ProjectsManager = () => {
     image: null,
     projectLink: '',
     pdf: null,
-    pdfUrl: ''
+    pdfUrl: '',
+    featured: false
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -118,6 +119,8 @@ const ProjectsManager = () => {
       // For array fields
       formData.categories.forEach(cat => data.append('categories', cat));
       formData.role.forEach(role => data.append('role', role));
+      // Ensure featured is always sent
+      data.append('featured', formData.featured);
       // For image
       if (formData.image) data.append('image', formData.image);
       // For pdf
@@ -347,6 +350,20 @@ const ProjectsManager = () => {
           )}
         </div>
 
+        <div className="form-group form-group-checkbox">
+          <label htmlFor="featured">
+            <input
+              id="featured"
+              type="checkbox"
+              name="featured"
+              checked={formData.featured}
+              onChange={e => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
+              style={{ margin: 0 }}
+            />
+            Mark as Featured
+          </label>
+        </div>
+
         <div className="form-group">
           <label htmlFor="gallery">Gallery Images</label>
           <input
@@ -390,7 +407,7 @@ const ProjectsManager = () => {
         {projects.map(project => (
           <div key={project._id} className="project-item">
             <div className="project-info">
-              <h4>{project.title}</h4>
+              <h4>{project.title} {project.featured && <span style={{background:'#232323',color:'#fff',borderRadius: '8px',padding:'2px 10px',fontSize:'0.8em',marginLeft:'8px'}}>Featured</span>}</h4>
               <p>{project.description}</p>
               {/* IMAGE DISPLAY */}
               {project.image && project.image.url && (

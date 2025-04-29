@@ -2108,6 +2108,7 @@ header .navbar-expand .dropdown:hover > .dropdown-menu {
 }
 .portfolio-item .card-thumb img {
   min-height: 550px;
+  /* height: 720px; */
   object-fit: cover;
   transition: all var(--transition-function) var(--transition-duration);
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Footer = ({ className = "footer-area", copyrightText = "©2025 Brilio, All Rights Reserved By", linkText = "Themeland", linkUrl = "https://themeforest.net/user/theme_land", scrollToTopText = "Scroll to Top", scrollToTopTarget = "#header" }) => {
+const Footer = ({ className = "footer-area", copyrightText = "", linkText = "", linkUrl = "https://themeforest.net/user/theme_land", scrollToTopText = "Scroll to Top", scrollToTopTarget = "#header" }) => {
 	return (
 		<footer className={`${className}`}>
 			<div className="container">

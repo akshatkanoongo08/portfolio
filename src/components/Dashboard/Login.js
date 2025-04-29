@@ -90,10 +90,10 @@ const Login = () => {
           Login
         </button>
       </form>
-      <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
+      {/* <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
         <p>Debug Info:</p>
         <pre>{JSON.stringify(credentials, null, 2)}</pre>
-      </div>
+      </div> */}
     </div>
   );
 };

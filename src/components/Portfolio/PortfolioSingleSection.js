@@ -142,7 +142,7 @@ const PortfolioSingleSection = () => {
                 )}
                 {project.pdfUrl && (
                   <li className="mb-3">
-                    <strong>Project PDF (Public URL):</strong>{' '}
+                    <strong>Project PDF :</strong>{' '}
                     <a href={project.pdfUrl} target="_blank" rel="noopener noreferrer">
                       View PDF
                     </a>
