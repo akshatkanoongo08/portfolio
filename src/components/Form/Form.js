@@ -30,9 +30,35 @@ const Form = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        alert('Message sent successfully!');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          companyName: '',
+          website: '',
+          interest: '',
+          budget: '',
+          timeline: '',
+          message: '',
+        });
+      } else {
+        alert('Failed to send message.');
+      }
+    } catch (err) {
+      alert('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -64,7 +90,7 @@ const Form = () => {
           </div>
 
           <div className="col-12 col-lg-7 order-first order-md-last mt-sm-4 mt-lg-0">
-            <form id="contact-form" className="contact-form">
+            <form id="contact-form" className="contact-form" onSubmit={handleSubmit}>
               <div className="form-floating mb-3">
                 <input
                   type="text"
@@ -193,11 +219,9 @@ const Form = () => {
                 />
                 <label htmlFor="message">Message</label>
               </div>
-				<MagneticButton 
-					href="/#"
-					>
-					Submit Message
-				</MagneticButton>
+                <button type="submit" className="btn magnetic-button btn-outline">
+                  Submit Message
+                </button>
             </form>
             <p className="form-message"></p>
           </div>
