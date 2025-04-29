@@ -23,6 +23,9 @@ const DashboardLayout = () => {
             <Link to="/dashboard/categories">Categories</Link>
           </li>
           <li>
+            <Link to="/dashboard/enquiries">Enquiries</Link>
+          </li>
+          <li>
             <button 
               onClick={() => {
                 localStorage.removeItem('token');

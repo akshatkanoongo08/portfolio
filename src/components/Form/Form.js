@@ -147,55 +147,28 @@ const Form = () => {
                 <label htmlFor="website">Company Website</label>
               </div>
               <div className="form-group mb-3">
-                <div className="form-label">I'm interested in:</div>
-                <div className="form-input-group">
-                  {['Branding', 'Web Design', 'App Design', 'Other'].map((option) => (
-                    <div className="form-input" key={option}>
-                      <input
-                        type="radio"
-                        className="btn-check"
-                        name="interest"
-                        id={`option-${option.toLowerCase()}`}
-                        value={option}
-                        onChange={handleInputChange}
-                      />
-                      <label className="btn magnetic-button btn-outline" htmlFor={`option-${option.toLowerCase()}`}>
-                        {option}
-                      </label>
-                    </div>
-                  ))}
-                </div>
+                <label htmlFor="interest" className="form-label">I'm interested in:</label>
+                <textarea
+                  className="form-control"
+                  id="interest"
+                  placeholder="Describe what you're interested in..."
+                  value={formData.interest}
+                  onChange={handleInputChange}
+                  rows={2}
+                  style={{ resize: 'vertical' }}
+                />
               </div>
               <div className="form-group mb-3">
-                <div className="form-label">My budget is:</div>
-                <div className="form-input-group">
-                  {['< 2k', '2-5k', '5-10k', '10-15k', '> 20k'].map((budget) => (
-                    <div className="form-input" key={budget}>
-                      <input
-                        type="radio"
-                        className="btn-check"
-                        name="budget"
-                        id={`budget-${budget.replace(' ', '-')}`}
-                        value={budget}
-                        onChange={handleInputChange}
-                      />
-                      <label className="btn magnetic-button btn-outline" htmlFor={`budget-${budget.replace(' ', '-')}`}>
-                        {budget}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="form-floating mb-3">
-                <input
-                  type="text"
+                <label htmlFor="budget" className="form-label">My budget is:</label>
+                <textarea
                   className="form-control"
-                  id="exact-budget"
-                  placeholder="Exact Budget"
+                  id="budget"
+                  placeholder="Describe your budget or expectations..."
                   value={formData.budget}
                   onChange={handleInputChange}
+                  rows={2}
+                  style={{ resize: 'vertical' }}
                 />
-                <label htmlFor="exact-budget">Do you have an exact budget?</label>
               </div>
               <div className="form-floating mb-3">
                 <input

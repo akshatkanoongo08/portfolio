@@ -12,6 +12,7 @@ import Contact from "../themes/contact";
 import DashboardLayout from '../components/Dashboard/DashboardLayout';
 import ProjectsManager from '../components/Dashboard/ProjectsManager';
 import CategoriesManager from '../components/Dashboard/CategoriesManager';
+import EnquiriesManager from '../components/Dashboard/EnquiriesManager';
 import Login from '../components/Dashboard/Login';
 
 const MyRoutes = () => {
@@ -28,6 +29,7 @@ const MyRoutes = () => {
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route path="projects" element={<ProjectsManager />} />
         <Route path="categories" element={<CategoriesManager />} />
+        <Route path="enquiries" element={<EnquiriesManager />} />
       </Route>
     </Routes>
   );
