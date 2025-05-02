@@ -232,21 +232,20 @@ const ProjectsManager = () => {
         <div className="form-group">
           <label htmlFor="categories">Categories *</label>
           <select
-          id="categories"
-          name="categories"
-          multiple
-          value={formData.categories}
-          onChange={(e) => {
-            const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
-            setFormData(prev => ({ ...prev, categories: selected }));
-          }}
-        >
-          {allCategories.map(cat => (
-            <option key={cat._id} value={cat._id}>
-              {cat.label}
-            </option>
-          ))}
-        </select>
+  id="categories"
+  name="categories"
+  value={formData.categories}
+  onChange={(e) =>
+    setFormData(prev => ({ ...prev, categories: [e.target.value] }))
+  }
+>
+  <option value="">-- Select a category --</option>
+  {allCategories.map(cat => (
+    <option key={cat._id} value={cat._id}>
+      {cat.label}
+    </option>
+  ))}
+</select>
 
         </div>
 

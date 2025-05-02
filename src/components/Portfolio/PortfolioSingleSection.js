@@ -42,127 +42,158 @@ const PortfolioSingleSection = () => {
   return (
     <section className="section-padding">
       <div className="container">
-        {/* Project Header */}
+
+        {/* Title */}
+        <div className="mb-4">
+          <h1 className="display-4 fw-bold text-black">{project.title}</h1>
+        </div>
+
+        {/* Categories */}
+        <div className="mb-4">
+          {Array.isArray(project.categories) && project.categories.map((category, index) => (
+            <span key={category._id || index} className="badge bg-light border me-2 text-black p-2">
+              {category.name || category.label || category.value}
+            </span>
+          ))}
+        </div>
+
+        {/* Description and Project Meta */}
         <div className="row mb-5">
-          <div className="col-12">
-            <h1 className="display-4">{project.title}</h1>
-            <div className="categories mb-4">
-              {Array.isArray(project.categories) && project.categories.map((category, index) => (
-                <span key={category._id || index} className="badge bg-primary me-2">
-                  {category.name || category.label || category.value}
-                </span>
-              ))}
-            </div>
+          <div className="col-lg-8 mb-4 mb-lg-0">
+            <div
+              dangerouslySetInnerHTML={{ __html: project.description }}
+            />
+          </div>
+          <div className="col-lg-4">
+          <div className="row">
+  {/* Client */}
+  {project.client && (
+    <div className="col-md-6 mb-3">
+      <strong>Client</strong>
+      <div className="text-muted">{project.client}</div>
+    </div>
+  )}
+
+  {/* Date */}
+  {project.date && (
+    <div className="col-md-6 mb-3">
+      <strong>Date</strong>
+      <div className="text-muted">{new Date(project.date).toLocaleDateString()}</div>
+    </div>
+  )}
+  {/* Task */}
+{project.task && (
+  <div className="col-md-6 mb-3">
+    <strong>Task</strong>
+    <div className="text-muted">{project.task}</div>
+  </div>
+)}
+
+{/* Role */}
+{project.role && (
+  <div className="col-md-6 mb-3">
+    <strong>Role</strong>
+    <div className="text-muted">{project.role}</div>
+  </div>
+)}
+
+
+  {/* Website */}
+  {project.projectLink && (
+    <div className="col-md-6 mb-3">
+      <a
+        href={project.projectLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-dark text-decoration-none d-inline-flex align-items-center link-hover"
+      >
+        <strong className="me-2">Website</strong>
+        <span className="text-secondary">→</span>
+      </a>
+    </div>
+  )}
+
+  {/* Project PDF */}
+  {(project.pdf?.url || project.pdfUrl) && (
+    <div className="col-md-6 mb-3">
+      <a
+        href={project.pdf?.url || project.pdfUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-dark text-decoration-none d-inline-flex align-items-center link-hover"
+        download
+      >
+        <strong className="me-2">Project PDF</strong>
+        <span className="text-secondary">→</span>
+      </a>
+    </div>
+  )}
+</div>
+
+
+
           </div>
         </div>
 
-        {/* Project Image */}
-        <div className="row mb-5">
-          <div className="col-12">
+        {/* Main Image */}
+        <div className="mb-5">
           <img
-  src={
-    project.image && project.image.url
-      ? project.image.url.startsWith('http')
-        ? project.image.url
-        : `http://localhost:5000${project.image.url}`
-      : '/img/placeholder.jpg'
-  }
-  alt={project.title}
-  className="img-fluid rounded shadow-lg"
-  style={{ width: '100%', maxHeight: '600px', objectFit: 'cover' }}
-  onError={e => {
-    e.target.onerror = null;
-    e.target.src = '/img/placeholder.jpg';
-  }}
-/>
-          </div>
+            src={
+              project.image?.url
+                ? project.image.url.startsWith('http')
+                  ? project.image.url
+                  : `http://localhost:5000${project.image.url}`
+                : '/img/placeholder.jpg'
+            }
+            alt={project.title}
+            className="img-fluid rounded shadow-lg"
+            style={{ width: '100%', maxHeight: '600px', objectFit: 'cover', transition: 'transform 0.3s ease' }}
+            onError={e => {
+              e.target.onerror = null;
+              e.target.src = '/img/placeholder.jpg';
+            }}
+            onMouseOver={e => e.target.style.transform = 'scale(1.05)'}
+            onMouseOut={e => e.target.style.transform = 'scale(1)'}
+          />
         </div>
 
-        {/* Project Gallery */}
+        {/* Gallery Images Vertically One Below Another */}
         {Array.isArray(project.gallery) && project.gallery.length > 0 && (
           <div className="row mb-5">
             <div className="col-12">
-              <h4>Gallery</h4>
-              <div className="d-flex flex-wrap gap-3">
-                {project.gallery.map((img, idx) => (
+              {project.gallery.map((img, idx) => (
+                <div key={idx} className="mb-4">
                   <img
-                    key={idx}
-                    src={img.url && !img.url.startsWith('http') ? `http://localhost:5000${img.url}` : img.url}
+                    src={
+                      img.url && !img.url.startsWith('http')
+                        ? `http://localhost:5000${img.url}`
+                        : img.url
+                    }
                     alt={`Gallery ${idx + 1}`}
                     className="img-fluid rounded shadow"
-                    style={{ width: '200px', height: '150px', objectFit: 'cover' }}
+                    style={{ width: '100%', height: '600px', objectFit: 'cover', transition: 'transform 0.3s ease' }}
                     onError={e => {
                       e.target.onerror = null;
                       e.target.src = '/img/placeholder.jpg';
                     }}
+                    onMouseOver={e => e.target.style.transform = 'scale(1.05)'}
+                    onMouseOut={e => e.target.style.transform = 'scale(1)'}
                   />
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Project Details */}
+        {/* Back Button */}
         <div className="row">
-          <div className="col-lg-8">
-            <div className="project-description">
-              <h3 className="mb-4">Project Description</h3>
-              <div dangerouslySetInnerHTML={{ __html: project.description }} />
-            </div>
-          </div>
-          <div className="col-lg-4">
-            <div className="project-meta p-4 bg-light rounded">
-              <h4 className="mb-4">Project Details</h4>
-              <ul className="list-unstyled">
-                {project.client && (
-                  <li className="mb-3">
-                    <strong>Client:</strong> {project.client}
-                  </li>
-                )}
-                {project.date && (
-                  <li className="mb-3">
-                    <strong>Date:</strong> {new Date(project.date).toLocaleDateString()}
-                  </li>
-                )}
-                {project.projectLink && (
-                  <li className="mb-3">
-                    <strong>Website:</strong>{' '}
-                    <a href={project.projectLink} target="_blank" rel="noopener noreferrer">
-                      Visit Project
-                    </a>
-                  </li>
-                )}
-                {project.pdf && project.pdf.url && (
-                  <li className="mb-3">
-                    <strong>Project PDF (Cloudinary):</strong>{' '}
-                    <a href={project.pdf.url} target="_blank" rel="noopener noreferrer" download>
-                      Download PDF
-                    </a>
-                  </li>
-                )}
-                {project.pdfUrl && (
-                  <li className="mb-3">
-                    <strong>Project PDF :</strong>{' '}
-                    <a href={project.pdfUrl} target="_blank" rel="noopener noreferrer">
-                      View PDF
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div>
+          <div className="col-12">
+            <Link to="/portfolio" className="btn btn-outline-primary btn-lg shadow-sm">
+              Back to Portfolio
+            </Link>
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="row mt-5">
-          <div className="col-12">
-            <div className="d-flex justify-content-between">
-              <Link to="/portfolio" className="btn btn-outline-primary">
-                Back to Portfolio
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
