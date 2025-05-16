@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
 
-const API_URL = "http://localhost:5000";
+const API_URL = `${process.env.REACT_APP_API_URL}`;
+
 
 const PortfolioTwo = () => {
   const [projects, setProjects] = useState([]);

@@ -142,7 +142,7 @@ const PortfolioSingleSection = () => {
               project.image?.url
                 ? project.image.url.startsWith('http')
                   ? project.image.url
-                  : `http://localhost:5000${project.image.url}`
+                  : `${process.env.REACT_APP_API_URL}${project.image.url}`
                 : '/img/placeholder.jpg'
             }
             alt={project.title}
@@ -166,7 +166,7 @@ const PortfolioSingleSection = () => {
                   <img
                     src={
                       img.url && !img.url.startsWith('http')
-                        ? `http://localhost:5000${img.url}`
+                        ? `${process.env.REACT_APP_API_URL}${img.url}`
                         : img.url
                     }
                     alt={`Gallery ${idx + 1}`}

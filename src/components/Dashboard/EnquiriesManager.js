@@ -9,7 +9,7 @@ const EnquiriesManager = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this enquiry?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/contact/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contact/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Failed to delete enquiry');
@@ -23,7 +23,7 @@ const EnquiriesManager = () => {
   useEffect(() => {
     const fetchEnquiries = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/contact');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contact`);
         if (!response.ok) throw new Error('Failed to fetch enquiries');
         const data = await response.json();
         setEnquiries(data);

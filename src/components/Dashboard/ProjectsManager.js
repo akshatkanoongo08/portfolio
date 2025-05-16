@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getProjects, createProject, updateProject, deleteProject } from '../../services/projectService';
 import './ProjectsManager.css';
 
-const API_URL = 'http://localhost:5000'; // Match your backend URL
+const API_URL = `${process.env.REACT_APP_API_URL}`; // Match your backend URL
 
 const ProjectsManager = () => {
   const [projects, setProjects] = useState([]);
@@ -37,7 +37,7 @@ const ProjectsManager = () => {
   
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/categories');
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/categories`);
       const data = await res.json();
       setAllCategories(data);
     } catch (err) {
@@ -413,7 +413,7 @@ const ProjectsManager = () => {
                 <img
                   src={project.image.url.startsWith('http')
                     ? project.image.url
-                    : `http://localhost:5000${project.image.url}`}
+                    : `${process.env.REACT_APP_API_URL}${project.image.url}`}
                   alt={project.title}
                   style={{ maxWidth: 200, maxHeight: 200, display: 'block', marginTop: 8 }}
                 />
@@ -428,7 +428,7 @@ const ProjectsManager = () => {
                         key={idx}
                         src={img.url.startsWith('http')
                           ? img.url
-                          : `http://localhost:5000${img.url}`}
+                          : `${process.env.REACT_APP_API_URL}${img.url}`}
                         alt={`Gallery ${idx + 1}`}
                         style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 4, border: '1px solid #eee' }}
                       />
